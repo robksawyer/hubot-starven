@@ -34,7 +34,8 @@
     "limit": "0.0.1",
     "parser": "^0.1.4",
     "phantomjs": "^1.9.12",
-    "quiche": "0.0.8"
+    "quiche": "0.0.8",
+    "short-url": "0.0.1"
   },
   "devDependencies": {
     "mocha": "*",

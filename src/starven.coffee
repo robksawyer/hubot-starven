@@ -19,7 +19,8 @@
 fs   = require('fs')
 path = require('path')
 quiche = require('quiche') # https://www.npmjs.org/package/quiche
-                           
+gShort = require('short-url') # https://www.npmjs.org/package/short-url
+
 process.env.HUBOT_DATASETS_URL ||= 'https://www.quandl.com/api/v1/datasets/COOLEY/'
 process.env.HUBOT_GOOGLE_CHART_URL ||= 'http://chart.googleapis.com/chart?'
 
@@ -97,8 +98,11 @@ module.exports = (robot) ->
             imageUrl = chart.getUrl(false)
 
             # url = process.env.HUBOT_GOOGLE_CHART_URL + chartArgs.join('&') + '#.png'
-            msg.send "#{imageUrl}#.png"
-            msg.send rdata.description
+            finalUrl "#{imageUrl}#.png"
+            gShort.shorten(finalUrl, function(err, url) {
+              msg.send(url); # http://goo.gl/fbsS
+              msg.send rdata.description
+            });
 
           else 
 
