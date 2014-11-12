@@ -33,7 +33,8 @@
     "hubot": "^2.9.3",
     "limit": "0.0.1",
     "parser": "^0.1.4",
-    "phantomjs": "^1.9.12"
+    "phantomjs": "^1.9.12",
+    "quiche": "0.0.8"
   },
   "devDependencies": {
     "mocha": "*",
