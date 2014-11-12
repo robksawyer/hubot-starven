@@ -93,7 +93,7 @@ module.exports = (robot) ->
             imageUrl = chart.getUrl(false)
 
             # url = process.env.HUBOT_GOOGLE_CHART_URL + chartArgs.join('&') + '#.png'
-            finalUrl "#{imageUrl}#.png"
+            finalUrl = "#{imageUrl}#.png"
             gShort.shorten finalUrl, (err, url) ->
               msg.send(url); # http://goo.gl/fbsS
               msg.send rdata.description
