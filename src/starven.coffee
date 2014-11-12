@@ -64,11 +64,11 @@ module.exports = (robot) ->
             formattedData.series_b = (b[2] for b in rdata.data)
             formattedData.series_c = (c[3] for c in rdata.data)
             theData = [ 
-              [ encodeURIComponent(formattedData.dates) ],
               [ formattedData.series_a ],
               [ formattedData.series_b ],
               [ formattedData.series_c ]
             ]
+            theDates = encodeURIComponent(formattedData.dates)
 
             chartArgs = []
             datePart = []
@@ -85,7 +85,7 @@ module.exports = (robot) ->
             # chartArgs.push 'chds=a'
             # chartArgs.push 'chbh=6,1,6'
             chartArgs.push 'chxt=x,y'                                                   # Axis styles and labels
-            #chartArgs.push 'chxl=0:|' + date30sIntervals.join('|')                     # Custom axis label
+            chartArgs.push 'chxl=0:|' + theDates.join("|")                   # Custom axis label
             chartArgs.push 'chxp=0,0'                                                   # Label location
             chartArgs.push 'chd=t:' + theData.join("|")                                 # The data
 
