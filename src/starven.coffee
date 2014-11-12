@@ -69,11 +69,10 @@ module.exports = (robot) ->
               [ formattedData.series_c ]
             ]
             theDates = formattedData.dates
+            theDates = [ theDates[0], theDates[Math.ceil(theDates.length/2)], theDates[theDates.length] ]
+
             rdata.column_names.shift() # Remove Date
-
-
-            theDates = [ theDates[0], theDates[Math.ceil(middles.length/2)], theDates[theDates.length] ]
-
+            
             chartArgs = []
             datePart = []
             datePart.push encodeURIComponent(rdata.from_date)
