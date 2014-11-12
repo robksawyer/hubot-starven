@@ -18,12 +18,9 @@
 
 fs   = require('fs')
 path = require('path')
-events = require('events')
-# ChartImage = require('../module/chart_image')
 
 process.env.HUBOT_DATASETS_URL ||= 'https://www.quandl.com/api/v1/datasets/COOLEY/'
-process.env.HUBOT_GOOGLE_CHART_URL ||= 'https://www.google.com/jsapi'
-process.env.HUBOT_DEFAULT_CHART_TYPE ||= 'line'
+process.env.HUBOT_GOOGLE_CHART_URL ||= 'http://chart.googleapis.com/chart?'
 
 module.exports = (robot) ->
 
@@ -42,55 +39,64 @@ module.exports = (robot) ->
   #
   robot.respond /startup (valuations|vals)/i, (msg) ->
 
-    robot.http(process.env.HUBOT_GOOGLE_CHART_URL)
-      .get() (err, res, body) ->
+    data = []
 
-        vm.runInThisContext( body, 'remote/jsapi.js' ); 
+    robot.http(process.env.HUBOT_DATASETS_URL + "VC_VALUE_BY_SERIES.json")
+       .header('accept', 'application/json')
+       .get() (err, res, body) -> 
 
-        google.load('visualization', '1', {
-          packages: ['corechart']
-        });
+          if err
+            msg.send "Encountered an error :( #{err}"
 
-        data = []
+          if res.statusCode isnt 200
+            msg.send "I wasn't able to figure out what the numbers are."
+          
+          rdata = JSON.parse(body) if body
 
-        robot.http(process.env.HUBOT_DATASETS_URL + "VC_VALUE_BY_SERIES.json")
-           .header('accept', 'application/json')
-           .get() (err, res, body) -> 
+          if rdata
 
-              if err
-                msg.send "Encountered an error :( #{err}"
+            # Use the data that was compiled
+            msg.send "Please wait a few seconds. Now creating..."
 
-              if res.statusCode isnt 200
-                msg.send "I wasn't able to figure out what the numbers are."
-              
-              rdata = JSON.parse(body) if body
+            formattedData = {}
+            formattedData.dates = (dates[0] for dates in rdata.data)
+            formattedData.series_a = (a[1] for a in rdata.data)
+            formattedData.series_b = (b[2] for b in rdata.data)
+            formattedData.series_c = (c[3] for c in rdata.data)
+            theData = [ 
+              [ formattedData.dates ],
+              [ formattedData.series_a ],
+              [ formattedData.series_b ],
+              [ formattedData.series_c ]
+            ]
 
-              if rdata
+            msg.send theData;
 
-                #The chart type to build
-                type = process.env.HUBOT_DEFAULT_CHART_TYPE
-                
-                chart = new google.visualization.LineChart()
+            chartArgs = []
+            datePart = []
+            datePart.push rdata.from_date
+            datePart.push 'to'
+            datePart.push rdata.to_date
+            chartArgs.push 'chtt=' +  rdata.name                                        # Chart title
+            chartArgs.push 'chts=000000,14'                                             # <color>,<font_size>, <opt_alignment>
+            chartArgs.push 'chs=750x400'                                                # <width>x<height>
+            chartArgs.push 'cht=lcy'                                                    # Chart type
+            chartArgs.push 'chdl=' + rdata.column_names.join("|")                       # Chart legend text and style <data_series_1_label>|...|<data_series_n_label>
+            chartArgs.push 'chdlp=t'                                                    # <opt_position>|<opt_label_order>
+            chartArgs.push 'chco=000000,FF6666'                                         # Series colors <color_1>, ... <color_n>
+            # chartArgs.push 'chds=a'
+            # chartArgs.push 'chbh=6,1,6'
+            chartArgs.push 'chxt=x,y'                                                   # Axis styles and labels
+            #chartArgs.push 'chxl=0:|' + date30sIntervals.join('|')                     # Custom axis label
+            chartArgs.push 'chxp=0,0'                                                   # Label location
+            chartArgs.push 'chd=t:' + theData.join("|")                                 # The data
 
-                #Build the data in the chart.js format
-                data = [
-                  rdata.column_names,
-                  rdata.data
-                ]
+            url = process.env.HUBOT_GOOGLE_CHART_URL + chartArgs.join('&') + '#.png'
+            msg.send url + '\n-\n' + rdata.description
 
-                # Use the data that was compiled
-                msg.send "Please wait a few seconds. Now creating..."
+          else 
 
-                # msg.send data
-                chart.draw(data, options);
-
-                chartImage = chart.getImageURI()
-                
-                msg.reply chartImage
-
-              else 
-
-                msg.send "The dataset was too confusing, so I gave up."
+            msg.send "The dataset was too confusing, so I gave up."
 
 
   # 

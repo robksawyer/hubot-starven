@@ -29,6 +29,7 @@
     "coffee-script": "~1.6",
     "crypto": "0.0.3",
     "events": "^1.0.2",
+    "googleapis": "^1.0.20",
     "hubot": "^2.9.3",
     "limit": "0.0.1",
     "parser": "^0.1.4",
