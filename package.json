@@ -4,22 +4,33 @@
   "version": "0.0.0",
   "author": "robksawyer <robksawyer@gmail.com>",
   "license": "MIT",
-
-  "keywords": ["hubot","hubot-scripts","stratups","zacks","quandl","angel","investors","investing","news","ventures"],
-
+  "keywords": [
+    "hubot",
+    "hubot-scripts",
+    "stratups",
+    "zacks",
+    "quandl",
+    "angel",
+    "investors",
+    "investing",
+    "news",
+    "ventures"
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/hubot-scripts/hubot-starven.git"
   },
-
   "bugs": {
     "url": "https://github.com/hubot-scripts/hubot-starven/issues"
   },
-
   "dependencies": {
-    "coffee-script": "~1.6"
+    "chart": "^0.1.2",
+    "coffee-script": "~1.6",
+    "hubot": "^2.9.3",
+    "limit": "0.0.1",
+    "parser": "^0.1.4",
+    "phantomjs": "^1.9.12"
   },
-
   "devDependencies": {
     "mocha": "*",
     "chai": "*",
@@ -30,9 +41,7 @@
     "matchdep": "~0.1.2",
     "grunt-contrib-watch": "~0.5.3"
   },
-
   "main": "index.coffee",
-
   "scripts": {
     "test": "grunt test"
   }
