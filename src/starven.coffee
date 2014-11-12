@@ -18,7 +18,7 @@
 
 fs   = require('fs')
 path = require('path')
-Quiche = require('quiche') # https://www.npmjs.org/package/quiche
+quiche = require('quiche') # https://www.npmjs.org/package/quiche
                            
 process.env.HUBOT_DATASETS_URL ||= 'https://www.quandl.com/api/v1/datasets/COOLEY/'
 process.env.HUBOT_GOOGLE_CHART_URL ||= 'http://chart.googleapis.com/chart?'
