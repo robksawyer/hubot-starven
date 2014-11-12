@@ -83,23 +83,6 @@ module.exports = (robot) ->
 
             rdata.column_names.shift() # Remove Date
             
-            # chartArgs = []
-            # datePart = []
-            # datePart.push encodeURIComponent(rdata.from_date)
-            # datePart.push 'to'
-            # datePart.push encodeURIComponent(rdata.to_date)
-            # chartArgs.push 'chtt=' +  encodeURIComponent(rdata.name)                                      # Chart title
-            # #chartArgs.push 'chts=000000,14'                                                              # <color>,<font_size>, <opt_alignment>
-            # chartArgs.push 'chs=750x400'                                                                  # <width>x<height>
-            # chartArgs.push 'cht=lxy'                                                                      # Chart type
-            # chartArgs.push 'chdl=' + rdata.column_names.join("|")                                         # Chart legend text and style <data_series_1_label>|...|<data_series_n_label>
-            # chartArgs.push 'chdlp=t'                                                                      # <opt_position>|<opt_label_order>
-            # chartArgs.push 'chco=0000FF,FF0000,FFFF00,00FF00'                                             # Series colors <color_1>, ... <color_n>
-            # chartArgs.push 'chxt=x,y'                                                                     # Axis styles and labels
-            # #chartArgs.push 'chxl=0:|' + xVals.join("|")                                                   # Custom axis label
-            # #chartArgs.push 'chxp=0,0'                                                                     # Label location
-            # chartArgs.push 'chd=t:' + series_a.join("|")                                                  # The data
-
             chart = quiche('line')
             chart.setTitle(rdata.name);
             chart.setWidth(750);
@@ -114,7 +97,7 @@ module.exports = (robot) ->
             imageUrl = chart.getUrl(true)
 
             # url = process.env.HUBOT_GOOGLE_CHART_URL + chartArgs.join('&') + '#.png'
-            msg.send imageUrl 
+            msg.send imageUrl + '#.png'
             msg.send '\n-\n' + rdata.description
 
           else 
