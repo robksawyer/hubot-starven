@@ -69,6 +69,10 @@ module.exports = (robot) ->
             formattedData.series_c = (c[3] for c in rdata.data)
             
             theDates = formattedData.dates
+            theDates.replace(/-/g,'') # Remove the - so that charts will read as a number
+
+            msg.send theDates + '\n'
+
             xVals = [theDates[theDates.length-1], theDates[0]]
 
             series_a = [ theDates, formattedData.series_a ]
