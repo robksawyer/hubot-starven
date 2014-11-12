@@ -1,7 +1,7 @@
 {
   "name": "hubot-starven",
   "description": "The latest details about startups and ventures.",
-  "version": "0.0.33",
+  "version": "0.0.34",
   "author": "robksawyer <robksawyer@gmail.com>",
   "license": "MIT",
   "keywords": [
