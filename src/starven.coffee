@@ -41,7 +41,11 @@ module.exports = (robot) ->
 
     data = []
 
-    robot.http(process.env.HUBOT_DATASETS_URL + "VC_VALUE_BY_SERIES.json")
+    curDate = new Date()
+    curDate.setYear(curDate.getYear()-3) # Get the date three years ago
+    curDate = curDate.getFullYear() + "-" + curDate.getMonth() + "-" + "01"
+
+    robot.http(process.env.HUBOT_DATASETS_URL + "VC_VALUE_BY_SERIES.json?trim_start=" + curDate + "&collapse=quarterly")
        .header('accept', 'application/json')
        .get() (err, res, body) -> 
 
@@ -84,7 +88,7 @@ module.exports = (robot) ->
             chartArgs.push 'cht=lxy'                                                    # Chart type
             chartArgs.push 'chdl=' + rdata.column_names.join("|")                       # Chart legend text and style <data_series_1_label>|...|<data_series_n_label>
             chartArgs.push 'chdlp=t'                                                    # <opt_position>|<opt_label_order>
-            chartArgs.push 'chco=000000,FF6666'                                         # Series colors <color_1>, ... <color_n>
+            chartArgs.push 'chco=0000FF,FF0000,FFFF00,00FF00'                           # Series colors <color_1>, ... <color_n>
             # chartArgs.push 'chds=a'
             # chartArgs.push 'chbh=6,1,6'
             chartArgs.push 'chxt=x,y'                                                   # Axis styles and labels
