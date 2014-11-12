@@ -69,11 +69,11 @@ module.exports = (robot) ->
             formattedData.series_c = (c[3] for c in rdata.data)
             
             theDates = formattedData.dates
-            theDates = [theDates[theDates.length], theDates[0]]
+            xVals = [theDates[theDates.length-1], theDates[0]]
 
             series_a = [ theDates, formattedData.series_a ]
-            series_b = [ theDates, formattedData.series_b ]
-            series_c = [ theDates, formattedData.series_c ]
+            series_b = [ -1, formattedData.series_b ]
+            series_c = [ -1, formattedData.series_c ]
             
             #theDates = [ theDates[0], theDates[Math.ceil(theDates.length/2)], theDates[theDates.length] ]
 
