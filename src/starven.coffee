@@ -63,7 +63,7 @@ module.exports = (robot) ->
           if rdata
 
             # Use the data that was compiled
-            msg.send "Please wait a few seconds. Now creating..."
+            #msg.send "Please wait a few seconds. Now creating..."
 
             formattedData = {}
             formattedData.dates = ( dates[0] for dates in rdata.data)
@@ -97,8 +97,8 @@ module.exports = (robot) ->
             imageUrl = chart.getUrl(false)
 
             # url = process.env.HUBOT_GOOGLE_CHART_URL + chartArgs.join('&') + '#.png'
-            msg.send imageUrl.toString() + '#.png'
-            msg.send '\n-\n' + rdata.description
+            robot.send '#{imageUrl}#.png'
+            msg.send rdata.description
 
           else 
 
