@@ -40,7 +40,7 @@
     "hubot-scripts": ">= 2.4.2",
     "hubot-script-boilerplate": ">= 0.0.0",
     "hubot-hipchat": "~2.5.1-5",
-    "hubot-starven": ">0.0.1",
+    "hubot-starven": "*",
     "mocha": "*",
     "chai": "*",
     "sinon-chai": "*",
