@@ -70,14 +70,12 @@ module.exports = (robot) ->
               [ formattedData.series_c ]
             ]
 
-            msg.send theData;
-
             chartArgs = []
             datePart = []
-            datePart.push rdata.from_date
+            datePart.push encodeURIComponent(rdata.from_date)
             datePart.push 'to'
-            datePart.push rdata.to_date
-            chartArgs.push 'chtt=' +  rdata.name                                        # Chart title
+            datePart.push encodeURIComponent(rdata.to_date)
+            chartArgs.push 'chtt=' +  encodeURIComponent(rdata.name)                    # Chart title
             chartArgs.push 'chts=000000,14'                                             # <color>,<font_size>, <opt_alignment>
             chartArgs.push 'chs=750x400'                                                # <width>x<height>
             chartArgs.push 'cht=lcy'                                                    # Chart type
@@ -92,7 +90,8 @@ module.exports = (robot) ->
             chartArgs.push 'chd=t:' + theData.join("|")                                 # The data
 
             url = process.env.HUBOT_GOOGLE_CHART_URL + chartArgs.join('&') + '#.png'
-            msg.send url + '\n-\n' + rdata.description
+            msg.send url 
+            msg.send '\n-\n' + rdata.description
 
           else 
 
