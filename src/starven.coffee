@@ -70,14 +70,12 @@ module.exports = (robot) ->
             formattedData.series_c = (c[3] for c in rdata.data)
             
             theDates = formattedData.dates
-            xVals = [theDates[theDates.length-1], theDates[0]]
-            theDates = theDates.join(',').replace(/\-/g,'').split(',') # Remove the - so that charts will read as a number
+            xVals = [theDates[0], theDates[Math.ceil(theDates.length/2)], theDates[theDates.length-1]]
+            #theDates = theDates.join(',').replace(/\-/g,'').split(',') # Remove the - so that charts will read as a number
 
             series_a = formattedData.series_a 
             series_b = formattedData.series_b 
-            series_c = formattedData.series_c 
-            
-            theDates = [ theDates[0], theDates[Math.ceil(theDates.length/2)], theDates[theDates.length] ]
+            series_c = formattedData.series_c
 
             rdata.column_names.shift() # Remove Date
             
@@ -102,7 +100,8 @@ module.exports = (robot) ->
             chart.setTitle(rdata.name);
             chart.addData(series_a, rdata.column_names[0], '008000');
             chart.addData(series_b, rdata.column_names[1], '0000FF');
-            chart.addAxisLabels('x', theDates);
+            chart.addData(series_c, rdata.column_names[2], '0033FF');
+            chart.addAxisLabels('x', xVals);
             chart.setAutoScaling();
             chart.setTransparentBackground();
             imageUrl = chart.getUrl(true)
