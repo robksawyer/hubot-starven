@@ -73,11 +73,11 @@ module.exports = (robot) ->
             xVals = [theDates[theDates.length-1], theDates[0]]
             theDates = theDates.join(',').replace(/\-/g,'').split(',') # Remove the - so that charts will read as a number
 
-            series_a = [ theDates, formattedData.series_a ]
-            #series_b = [ theDates, formattedData.series_b ]
-            #series_c = [ theDates, formattedData.series_c ]
+            series_a = formattedData.series_a 
+            series_b = formattedData.series_b 
+            series_c = formattedData.series_c 
             
-            #theDates = [ theDates[0], theDates[Math.ceil(theDates.length/2)], theDates[theDates.length] ]
+            theDates = [ theDates[0], theDates[Math.ceil(theDates.length/2)], theDates[theDates.length] ]
 
             rdata.column_names.shift() # Remove Date
             
@@ -99,10 +99,10 @@ module.exports = (robot) ->
             # chartArgs.push 'chd=t:' + series_a.join("|")                                                  # The data
 
             chart = quiche('line')
-            chart.setTitle('Something with lines');
-            chart.addData([3000, 2900, 1500], 'Blah', '008000');
-            chart.addData([1000, 1500, 2000], 'Asdf', '0000FF');
-            chart.addAxisLabels('x', ['1800', '1900', '2000']);
+            chart.setTitle(rdata.name);
+            chart.addData(series_a, rdata.column_names[0], '008000');
+            chart.addData(series_b, rdata.column_names[1], '0000FF');
+            chart.addAxisLabels('x', theDates);
             chart.setAutoScaling();
             chart.setTransparentBackground();
             imageUrl = chart.getUrl(true)
