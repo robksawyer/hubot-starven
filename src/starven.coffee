@@ -63,17 +63,18 @@ module.exports = (robot) ->
             msg.send "Please wait a few seconds. Now creating..."
 
             formattedData = {}
-            formattedData.dates = ( encodeURIComponent(dates[0]) for dates in rdata.data)
+            formattedData.dates = ( dates[0] for dates in rdata.data)
             formattedData.series_a = (a[1] for a in rdata.data)
             formattedData.series_b = (b[2] for b in rdata.data)
             formattedData.series_c = (c[3] for c in rdata.data)
-            theData = [ 
-              [ formattedData.series_a ],
-              [ formattedData.series_b ],
-              [ formattedData.series_c ]
-            ]
+            
             theDates = formattedData.dates
-            theDates = [ theDates[0], theDates[Math.ceil(theDates.length/2)], theDates[theDates.length] ]
+
+            series_a = [ theDates, formattedData.series_a ]
+            series_b = [ theDates, formattedData.series_b ]
+            series_c = [ theDates, formattedData.series_c ]
+            
+            #theDates = [ theDates[0], theDates[Math.ceil(theDates.length/2)], theDates[theDates.length] ]
 
             rdata.column_names.shift() # Remove Date
             
@@ -82,19 +83,19 @@ module.exports = (robot) ->
             datePart.push encodeURIComponent(rdata.from_date)
             datePart.push 'to'
             datePart.push encodeURIComponent(rdata.to_date)
-            chartArgs.push 'chtt=' +  encodeURIComponent(rdata.name)                    # Chart title
-            #chartArgs.push 'chts=000000,14'                                             # <color>,<font_size>, <opt_alignment>
-            chartArgs.push 'chs=750x400'                                                # <width>x<height>
-            chartArgs.push 'cht=lxy'                                                    # Chart type
-            chartArgs.push 'chdl=' + rdata.column_names.join("|")                       # Chart legend text and style <data_series_1_label>|...|<data_series_n_label>
-            chartArgs.push 'chdlp=t'                                                    # <opt_position>|<opt_label_order>
-            chartArgs.push 'chco=0000FF,FF0000,FFFF00,00FF00'                           # Series colors <color_1>, ... <color_n>
+            chartArgs.push 'chtt=' +  encodeURIComponent(rdata.name)                                      # Chart title
+            #chartArgs.push 'chts=000000,14'                                                              # <color>,<font_size>, <opt_alignment>
+            chartArgs.push 'chs=750x400'                                                                  # <width>x<height>
+            chartArgs.push 'cht=lxy'                                                                      # Chart type
+            chartArgs.push 'chdl=' + rdata.column_names.join("|")                                         # Chart legend text and style <data_series_1_label>|...|<data_series_n_label>
+            chartArgs.push 'chdlp=t'                                                                      # <opt_position>|<opt_label_order>
+            chartArgs.push 'chco=0000FF,FF0000,FFFF00,00FF00'                                             # Series colors <color_1>, ... <color_n>
             # chartArgs.push 'chds=a'
             # chartArgs.push 'chbh=6,1,6'
-            chartArgs.push 'chxt=x,y'                                                   # Axis styles and labels
-            chartArgs.push 'chxl=0:|' + theDates.join("|")                              # Custom axis label
-            chartArgs.push 'chxp=0,0'                                                   # Label location
-            chartArgs.push 'chd=t:' + theData.join("|")                                 # The data
+            chartArgs.push 'chxt=x,y'                                                                     # Axis styles and labels
+            chartArgs.push 'chxl=0:|' + theDates.join("|")                                                # Custom axis label
+            chartArgs.push 'chxp=0,0'                                                                     # Label location
+            chartArgs.push 'chd=t:' + series_a.join("|") + series_b.join("|") + series_c.join("|")        # The data
 
             url = process.env.HUBOT_GOOGLE_CHART_URL + chartArgs.join('&') + '#.png'
             msg.send url 
