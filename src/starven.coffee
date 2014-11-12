@@ -98,10 +98,12 @@ module.exports = (robot) ->
 
             chart = quiche('line')
             chart.setTitle(rdata.name);
-            chart.addData(series_a, rdata.column_names[0], '008000');
-            chart.addData(series_b, rdata.column_names[1], '0000FF');
-            chart.addData(series_c, rdata.column_names[2], '0033FF');
-            chart.addAxisLabels('x', xVals);
+            chart.setWidth(750);
+            chart.setHeight(400);
+            chart.addData(series_a.reverse(), rdata.column_names[0], '008000');
+            chart.addData(series_b.reverse(), rdata.column_names[1], '0000FF');
+            chart.addData(series_c.reverse(), rdata.column_names[2], 'F06D16');
+            chart.addAxisLabels('x', xVals.reverse());
             chart.setAutoScaling();
             chart.setTransparentBackground();
             imageUrl = chart.getUrl(true)
