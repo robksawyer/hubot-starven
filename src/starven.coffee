@@ -71,11 +71,8 @@ module.exports = (robot) ->
             theDates = formattedData.dates
             rdata.column_names.shift() # Remove Date
 
-            Array::filter = ->
-              output = {}
-              output[@[key]] = @[key] for key in [0...20]
-              value for key, value of output
 
+            theDates = [ theDates[0], theDates[Math.ceil(middles.length/2)], theDates[theDates.length] ]
 
             chartArgs = []
             datePart = []
@@ -88,7 +85,7 @@ module.exports = (robot) ->
             chartArgs.push 'cht=lxy'                                                    # Chart type
             chartArgs.push 'chdl=' + rdata.column_names.join("|")                       # Chart legend text and style <data_series_1_label>|...|<data_series_n_label>
             chartArgs.push 'chdlp=t'                                                    # <opt_position>|<opt_label_order>
-            #chartArgs.push 'chco=000000,FF6666'                                         # Series colors <color_1>, ... <color_n>
+            chartArgs.push 'chco=000000,FF6666'                                         # Series colors <color_1>, ... <color_n>
             # chartArgs.push 'chds=a'
             # chartArgs.push 'chbh=6,1,6'
             chartArgs.push 'chxt=x,y'                                                   # Axis styles and labels
