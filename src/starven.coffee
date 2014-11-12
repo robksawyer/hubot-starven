@@ -71,8 +71,8 @@ module.exports = (robot) ->
             theDates = formattedData.dates
 
             series_a = [ theDates, formattedData.series_a ]
-            series_b = [ theDates, formattedData.series_b ]
-            series_c = [ theDates, formattedData.series_c ]
+            series_b = [ -1, formattedData.series_b ]
+            series_c = [ -1, formattedData.series_c ]
             
             #theDates = [ theDates[0], theDates[Math.ceil(theDates.length/2)], theDates[theDates.length] ]
 
