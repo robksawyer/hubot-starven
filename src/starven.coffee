@@ -69,11 +69,8 @@ module.exports = (robot) ->
             formattedData.series_c = (c[3] for c in rdata.data)
             
             theDates = formattedData.dates
-            theDates = theDates.join(',').replace(/\-/g,'').split(',') # Remove the - so that charts will read as a number
-
-            msg.send theDates + '\n'
-
             xVals = [theDates[theDates.length-1], theDates[0]]
+            theDates = theDates.join(',').replace(/\-/g,'').split(',') # Remove the - so that charts will read as a number
 
             series_a = [ theDates, formattedData.series_a ]
             series_b = [ -1, formattedData.series_b ]
@@ -98,7 +95,7 @@ module.exports = (robot) ->
             # chartArgs.push 'chds=a'
             # chartArgs.push 'chbh=6,1,6'
             chartArgs.push 'chxt=x,y'                                                                     # Axis styles and labels
-            chartArgs.push 'chxl=0:|' + theDates.join("|")                                                # Custom axis label
+            chartArgs.push 'chxl=0:|' + xVals.join("|")                                                # Custom axis label
             chartArgs.push 'chxp=0,0'                                                                     # Label location
             chartArgs.push 'chd=t:' + series_a.join("|") + series_b.join("|") + series_c.join("|")        # The data
 
