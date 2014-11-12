@@ -64,7 +64,7 @@ module.exports = (robot) ->
             formattedData.series_b = (b[2] for b in rdata.data)
             formattedData.series_c = (c[3] for c in rdata.data)
             theData = [ 
-              [ formattedData.dates ],
+              [ encodeURIComponent(formattedData.dates) ],
               [ formattedData.series_a ],
               [ formattedData.series_b ],
               [ formattedData.series_c ]
@@ -78,7 +78,7 @@ module.exports = (robot) ->
             chartArgs.push 'chtt=' +  encodeURIComponent(rdata.name)                    # Chart title
             chartArgs.push 'chts=000000,14'                                             # <color>,<font_size>, <opt_alignment>
             chartArgs.push 'chs=750x400'                                                # <width>x<height>
-            chartArgs.push 'cht=lcy'                                                    # Chart type
+            chartArgs.push 'cht=lxy'                                                    # Chart type
             chartArgs.push 'chdl=' + rdata.column_names.join("|")                       # Chart legend text and style <data_series_1_label>|...|<data_series_n_label>
             chartArgs.push 'chdlp=t'                                                    # <opt_position>|<opt_label_order>
             chartArgs.push 'chco=000000,FF6666'                                         # Series colors <color_1>, ... <color_n>
