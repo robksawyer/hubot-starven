@@ -1,5 +1,7 @@
 # hubot-starven
 
+A work in progress...
+
 The latest details about startups and ventures.
 
 See [`src/starven.coffee`](src/starven.coffee) for full documentation.
