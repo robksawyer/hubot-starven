@@ -106,8 +106,8 @@ module.exports = (robot) ->
             chart.setAutoScaling();
             chart.setTransparentBackground();
             imageUrl = chart.getUrl(true)
-            
-            url = process.env.HUBOT_GOOGLE_CHART_URL + chartArgs.join('&') + '#.png'
+
+            # url = process.env.HUBOT_GOOGLE_CHART_URL + chartArgs.join('&') + '#.png'
             msg.send imageUrl 
             msg.send '\n-\n' + rdata.description
 
