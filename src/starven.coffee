@@ -73,8 +73,8 @@ module.exports = (robot) ->
             theDates = theDates.join(',').replace(/\-/g,'').split(',') # Remove the - so that charts will read as a number
 
             series_a = [ theDates, formattedData.series_a ]
-            series_b = [ -1, formattedData.series_b ]
-            series_c = [ -1, formattedData.series_c ]
+            #series_b = [ theDates, formattedData.series_b ]
+            #series_c = [ theDates, formattedData.series_c ]
             
             #theDates = [ theDates[0], theDates[Math.ceil(theDates.length/2)], theDates[theDates.length] ]
 
@@ -95,9 +95,9 @@ module.exports = (robot) ->
             # chartArgs.push 'chds=a'
             # chartArgs.push 'chbh=6,1,6'
             chartArgs.push 'chxt=x,y'                                                                     # Axis styles and labels
-            chartArgs.push 'chxl=0:|' + xVals.join("|")                                                # Custom axis label
+            chartArgs.push 'chxl=0:|' + xVals.join("|")                                                   # Custom axis label
             chartArgs.push 'chxp=0,0'                                                                     # Label location
-            chartArgs.push 'chd=t:' + series_a.join("|") + series_b.join("|") + series_c.join("|")        # The data
+            chartArgs.push 'chd=t:' + series_a.join("|")                                                  # The data
 
             url = process.env.HUBOT_GOOGLE_CHART_URL + chartArgs.join('&') + '#.png'
             msg.send url 
