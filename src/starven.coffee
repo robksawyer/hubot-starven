@@ -43,8 +43,10 @@ module.exports = (robot) ->
     data = []
 
     curDate = new Date()
-    curDate.setYear(curDate.getYear()-3) # Get the date three years ago
+    curDate.setYear(curDate.getFullYear()-3) # Get the date three years ago
     curDate = curDate.getFullYear() + "-" + curDate.getMonth() + "-" + "01"
+    
+    console.log(process.env.HUBOT_DATASETS_URL + "VC_VALUE_BY_SERIES.json?trim_start=" + curDate + "&collapse=quarterly");
 
     robot.http(process.env.HUBOT_DATASETS_URL + "VC_VALUE_BY_SERIES.json?trim_start=" + curDate + "&collapse=quarterly")
        .header('accept', 'application/json')
@@ -68,6 +70,7 @@ module.exports = (robot) ->
             formattedData.series_a = (a[1] for a in rdata.data)
             formattedData.series_b = (b[2] for b in rdata.data)
             formattedData.series_c = (c[3] for c in rdata.data)
+            formattedData.series_d = (d[4] for d in rdata.data)
             
             theDates = formattedData.dates
             xVals = [theDates[0], theDates[Math.ceil(theDates.length/2)], theDates[theDates.length-1]]
@@ -76,6 +79,7 @@ module.exports = (robot) ->
             series_a = formattedData.series_a 
             series_b = formattedData.series_b 
             series_c = formattedData.series_c
+            series_d = formattedData.series_d
 
             rdata.column_names.shift() # Remove Date
             
@@ -100,9 +104,10 @@ module.exports = (robot) ->
             chart.setTitle(rdata.name);
             chart.setWidth(750);
             chart.setHeight(400);
-            chart.addData(series_a.reverse(), rdata.column_names[0], '008000');
-            chart.addData(series_b.reverse(), rdata.column_names[1], '0000FF');
-            chart.addData(series_c.reverse(), rdata.column_names[2], 'F06D16');
+            chart.addData(series_a.reverse(), rdata.column_names[0], '6899C9');
+            chart.addData(series_b.reverse(), rdata.column_names[1], '9E5A8D');
+            chart.addData(series_c.reverse(), rdata.column_names[2], '50A450');
+            chart.addData(series_d.reverse(), rdata.column_names[3], 'E57F3C');
             chart.addAxisLabels('x', xVals.reverse());
             chart.setAutoScaling();
             chart.setTransparentBackground();
