@@ -24,8 +24,11 @@
     "url": "https://github.com/hubot-scripts/hubot-starven/issues"
   },
   "dependencies": {
+    "ascii-chart": "^1.1.0",
     "chart": "^0.1.2",
     "coffee-script": "~1.6",
+    "crypto": "0.0.3",
+    "events": "^1.0.2",
     "hubot": "^2.9.3",
     "limit": "0.0.1",
     "parser": "^0.1.4",

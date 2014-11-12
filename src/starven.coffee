@@ -18,11 +18,11 @@
 
 fs   = require('fs')
 path = require('path')
-ChartImage = require('../module/chart_image')
-chart = require('ascii-chart')
-clear = require('clear')
+events = require('events')
+# ChartImage = require('../module/chart_image')
 
 process.env.HUBOT_DATASETS_URL ||= 'https://www.quandl.com/api/v1/datasets/COOLEY/'
+process.env.HUBOT_GOOGLE_CHART_URL ||= 'https://www.google.com/jsapi'
 process.env.HUBOT_DEFAULT_CHART_TYPE ||= 'line'
 
 module.exports = (robot) ->
@@ -42,62 +42,55 @@ module.exports = (robot) ->
   #
   robot.respond /startup (valuations|vals)/i, (msg) ->
 
-    robot.http(process.env.HUBOT_DATASETS_URL + "VC_VALUE_BY_SERIES.json")
-       .header('accept', 'application/json')
-       .get() (err, res, body) -> 
+    robot.http(process.env.HUBOT_GOOGLE_CHART_URL)
+      .get() (err, res, body) ->
 
-          if err
-            msg.send "Encountered an error :( #{err}"
+        vm.runInThisContext( body, 'remote/jsapi.js' ); 
 
-          if res.statusCode isnt 200
-            msg.send "I wasn't able to figure out what the numbers are."
-          
-          rdata = JSON.parse(body) if body
+        google.load('visualization', '1', {
+          packages: ['corechart']
+        });
 
-          if rdata
+        data = []
 
-            #The chart type to build
-            type = process.env.HUBOT_DEFAULT_CHART_TYPE
-            
-            #Build the data in the chart.js format
-            data = 
-              labels: rdata.column_names
-              datasets: []
+        robot.http(process.env.HUBOT_DATASETS_URL + "VC_VALUE_BY_SERIES.json")
+           .header('accept', 'application/json')
+           .get() (err, res, body) -> 
 
-            adata = [1,5,5,13,3,2,0,2,34,22,15,12,8,4,3,6,18,-5,-15,-11,-23,-3,10,18,23,17,4,5,6,3,12,10,7,-4,17,30,27,25,23,16,14,12,8,6,4,2]
+              if err
+                msg.send "Encountered an error :( #{err}"
 
-            # Compile and format the data
-            i = 0
-            for result in rdata.data
-              data.datasets[i] =
-                label: result[0]
-                fillColor: "rgba(220,220,220,0.2)",
-                strokeColor: "rgba(220,220,220,1)",
-                pointColor: "rgba(220,220,220,1)",
-                pointStrokeColor: "#fff",
-                pointHighlightFill: "#fff",
-                pointHighlightStroke: "rgba(220,220,220,1)",
-                data: [ result[1], result[2], result[3], result[4] ]
-
-            # Use the data that was compiled
-            msg.send "Please wait a few seconds. Now creating..."
-            
-            charted = chart(adata)
-            msg.reply(charted)
-
-            # chart = new ChartImage()
-            # chart.generate type, data, (err, stdout, stderr) ->
-            #   if err
-            #     msg.send "#{err.name}: #{err.message}"
-            #   filename = encodeURIComponent(chart.filename)
+              if res.statusCode isnt 200
+                msg.send "I wasn't able to figure out what the numbers are."
               
-              
-              
-            #   msg.send "#{robot.helper.url()}/hubot/charts/#{filename}"
+              rdata = JSON.parse(body) if body
 
-          else 
+              if rdata
 
-            msg.send "The dataset was too confusing, so I gave up."
+                #The chart type to build
+                type = process.env.HUBOT_DEFAULT_CHART_TYPE
+                
+                chart = new google.visualization.LineChart()
+
+                #Build the data in the chart.js format
+                data = [
+                  rdata.column_names,
+                  rdata.data
+                ]
+
+                # Use the data that was compiled
+                msg.send "Please wait a few seconds. Now creating..."
+
+                # msg.send data
+                chart.draw(data, options);
+
+                chartImage = chart.getImageURI()
+                
+                msg.reply chartImage
+
+              else 
+
+                msg.send "The dataset was too confusing, so I gave up."
 
 
   # 
