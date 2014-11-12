@@ -97,7 +97,7 @@ module.exports = (robot) ->
             imageUrl = chart.getUrl(false)
 
             # url = process.env.HUBOT_GOOGLE_CHART_URL + chartArgs.join('&') + '#.png'
-            robot.send '#{imageUrl}#.png'
+            msg.send '#{imageUrl}#.png'
             msg.send rdata.description
 
           else 
