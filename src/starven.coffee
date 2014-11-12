@@ -93,11 +93,11 @@ module.exports = (robot) ->
             chart.addData(series_d.reverse(), rdata.column_names[3], 'E57F3C');
             chart.addAxisLabels('x', xVals.reverse());
             chart.setAutoScaling();
-            chart.setTransparentBackground();
-            imageUrl = chart.getUrl(true)
+            #chart.setTransparentBackground();
+            imageUrl = chart.getUrl(false)
 
             # url = process.env.HUBOT_GOOGLE_CHART_URL + chartArgs.join('&') + '#.png'
-            msg.send imageUrl + '#.png'
+            msg.send imageUrl.toString() + '#.png'
             msg.send '\n-\n' + rdata.description
 
           else 
