@@ -26,13 +26,8 @@ process.env.HUBOT_GOOGLE_CHART_URL ||= 'http://chart.googleapis.com/chart?'
 
 module.exports = (robot) ->
 
-  robot.helper =
-    url: () ->
-      server = robot.server.address()
-      process.env.HEROKU_URL ? "http://#{server.address}:#{server.port}"
-
-  robot.respond /hello/i, (msg) ->
-    msg.reply "hello!"
+  robot.respond /startups/i, (msg) ->
+    msg.reply "I can tell you a little about startups!"
 
   #
   # Startup Valuations
@@ -99,10 +94,9 @@ module.exports = (robot) ->
 
             # url = process.env.HUBOT_GOOGLE_CHART_URL + chartArgs.join('&') + '#.png'
             finalUrl "#{imageUrl}#.png"
-            gShort.shorten(finalUrl, function(err, url) {
+            gShort.shorten finalUrl, (err, url) ->
               msg.send(url); # http://goo.gl/fbsS
               msg.send rdata.description
-            });
 
           else 
 
