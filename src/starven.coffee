@@ -102,15 +102,6 @@ module.exports = (robot) ->
   #
   robot.respond /startup investment process|stp/i, (msg) ->
       process_details = 
-        "
-          Startup Investment Process for Venture Capitalists\n
-          1. Identify the startup to invest in.\n
-          2. Initial screening - Get to know more about the business and the entrepreneur.\n
-          3. Second screening – This could involve workshops, a deeper dive, specific Q&A and in these an investor may bring in multiple subject matter experts that are trusted or that are leading other investments from within the firm.\n
-          4. Light due dilligence\n
-          5. The partner meeting - This is where the investment thesis is initially presented by the investor to the partners. This could be in person, socializing the deal, or by circulating a memo.\n
-          6. Entrepreneur invited to present to partners - This is a good sign that the partners liked the investment thesis and are ready to invest.\n
-          7. Terms and due dilligence - Signing the paperwork and covering terms.\n
-        "
+        "Startup Investment Process for Venture Capitalists\n1. Identify the startup to invest in.\n2. Initial screening - Get to know more about the business and the entrepreneur.\n3. Second screening – This could involve workshops, a deeper dive, specific Q&A and in these an investor may bring in multiple subject matter experts that are trusted or that are leading other investments from within the firm.\n4. Light due dilligence\n5. The partner meeting - This is where the investment thesis is initially presented by the investor to the partners. This could be in person, socializing the deal, or by circulating a memo.\n6. Entrepreneur invited to present to partners - This is a good sign that the partners liked the investment thesis and are ready to invest.\n7. Terms and due dilligence - Signing the paperwork and covering terms.\n"
       msg.send process_details
 
