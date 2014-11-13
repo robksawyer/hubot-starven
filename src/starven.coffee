@@ -11,7 +11,8 @@
 #   hubot startup valuations - Pulls the latest startup valuations
 #
 # Notes:
-#  
+#  I'd like to thank Nick Moran of The Full Ratchet: Startup Investing & Fundraising from the Angel and Venture Capital Experts podcast. Much of the
+#  information collected was from these podcasts. You can find the podcast at https://itunes.apple.com/us/podcast/full-ratchet-startup-investing/id888084300?mt=2
 #
 # Author:
 #   robksawyer[@<org>]
