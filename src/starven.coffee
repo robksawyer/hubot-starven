@@ -16,8 +16,6 @@
 # Author:
 #   robksawyer[@<org>]
 
-fs   = require('fs')
-path = require('path')
 quiche = require('quiche') # https://www.npmjs.org/package/quiche
 gShort = require('short-url') # https://www.npmjs.org/package/short-url
 
@@ -36,14 +34,10 @@ module.exports = (robot) ->
   #
   robot.respond /startup (valuations|vals)/i, (msg) ->
 
-    data = []
-
     curDate = new Date()
     curDate.setYear(curDate.getFullYear()-3) # Get the date three years ago
     curDate = curDate.getFullYear() + "-" + curDate.getMonth() + "-" + "01"
     
-    console.log(process.env.HUBOT_DATASETS_URL + "VC_VALUE_BY_SERIES.json?trim_start=" + curDate + "&collapse=quarterly");
-
     robot.http(process.env.HUBOT_DATASETS_URL + "VC_VALUE_BY_SERIES.json?trim_start=" + curDate + "&collapse=quarterly")
        .header('accept', 'application/json')
        .get() (err, res, body) -> 
@@ -92,7 +86,6 @@ module.exports = (robot) ->
             #chart.setTransparentBackground();
             imageUrl = chart.getUrl(false)
 
-            # url = process.env.HUBOT_GOOGLE_CHART_URL + chartArgs.join('&') + '#.png'
             finalUrl = "#{imageUrl}#.png"
             gShort.shorten finalUrl, (err, url) ->
               msg.send(url); # http://goo.gl/fbsS
@@ -102,16 +95,3 @@ module.exports = (robot) ->
 
             msg.send "The dataset was too confusing, so I gave up."
 
-
-  # 
-  # Get an image from `/tmp` dir
-  # 
-  robot.router.get "/hubot/charts/:key", (req, res) ->
-      tmp = path.join(__dirname, '..', 'tmp', req.params.key)
-      fs.exists tmp, (exists) ->
-        if exists
-          fs.readFile tmp,(err,data) ->
-            res.writeHead(200, { 'Content-Type': 'image/png' })
-            res.end(data)
-        else
-          res.status(404).send('Not found')
