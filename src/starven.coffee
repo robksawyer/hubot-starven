@@ -31,6 +31,9 @@ module.exports = (robot) ->
   # Startup Valuations
   # Startup financing is typically done in several rounds, as the startup company grows and its capital needs evolve. The first institutional round is 
   # usually called the "Series A round". Later rounds are called Series B, C, D, etc.
+  # 
+  # Command:
+  #   user > hubot startup vals
   #
   robot.respond /startup (valuations|vals)/i, (msg) ->
 
@@ -96,12 +99,28 @@ module.exports = (robot) ->
             msg.send "The dataset was too confusing, so I gave up."
 
   #
-  # Startup Valuations
-  # Startup financing is typically done in several rounds, as the startup company grows and its capital needs evolve. The first institutional round is 
-  # usually called the "Series A round". Later rounds are called Series B, C, D, etc.
+  # The 7 Step Startup Investment Process for Venture Capitalists
+  # It's not as easy as they make it out to be on Shark Tank. In the words of Meek Mill, "there are levels to this shit."
+  # 
+  # Command:
+  #   user > hubot stp
   #
   robot.respond /startup investment process|stp/i, (msg) ->
       process_details = 
-        "Startup Investment Process for Venture Capitalists\n1. Identify the startup to invest in.\n2. Initial screening - Get to know more about the business and the entrepreneur.\n3. Second screening – This could involve workshops, a deeper dive, specific Q&A and in these an investor may bring in multiple subject matter experts that are trusted or that are leading other investments from within the firm.\n4. Light due dilligence\n5. The partner meeting - This is where the investment thesis is initially presented by the investor to the partners. This could be in person, socializing the deal, or by circulating a memo.\n6. Entrepreneur invited to present to partners - This is a good sign that the partners liked the investment thesis and are ready to invest.\n7. Terms and due dilligence - Signing the paperwork and covering terms.\n"
+        "The 7 Step Startup Investment Process for Venture Capitalists\n1. Identify the startup to invest in.\n2. Initial screening - Get to know more about the business and the entrepreneur.\n3. Second screening – This could involve workshops, a deeper dive, specific Q&A and in these an investor may bring in multiple subject matter experts that are trusted or that are leading other investments from within the firm.\n4. Light due dilligence\n5. The partner meeting - This is where the investment thesis is initially presented by the investor to the partners. This could be in person, socializing the deal, or by circulating a memo.\n6. Entrepreneur invited to present to partners - This is a good sign that the partners liked the investment thesis and are ready to invest.\n7. Terms and due dilligence - Signing the paperwork and covering terms.\n"
       msg.send process_details
+
+
+  #
+  # Investment Resources
+  # This what the investors are reading and following.
+  # 
+  # Command:
+  #   user > hubot investment resources
+  #
+  robot.respond /investment resources/i, (msg) ->
+      books = 
+        "-- Books --\n1. <a href='http://www.amazon.com/Venture-Deals-Smarter-Lawyer-Capitalist/dp/1118443616'>Venture Deals: Be Smarter Than Your Lawyer and Venture Capitalist</a> by Brad Feld\n2. <a href='http://www.theallianceframework.com'>The Alliance Framework</a>\n"
+      blogs = "\n-- Blogs -- \n1. <a href='http://venturehacks.com'>Venture Hacks</a>\n2. <a href='http://adventuresincapitalism.com'>Adventures in Capitalism</a>\n"
+      msg.send books + blogs
 
