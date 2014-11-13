@@ -124,13 +124,49 @@ module.exports = (robot) ->
   # Command:
   #   user > hubot investment resources
   #
-  robot.respond /investment resources/i, (msg) ->
-      books = "-- Books --\n"
-      books += "1. Venture Deals: Be Smarter Than Your Lawyer and Venture Capitalist by Brad Feld (http://amzn.to/1bia6Qa)\n"
-      books += "2. The Alliance Framework (http://www.theallianceframework.com)\n"
-      
-      blogs = "-- Blogs -- \n"
-      blogs += "1. Venture Hacks (http://venturehacks.com)\n"
-      blogs += "2. Adventures in Capitalism (http://adventuresincapitalism.com)\n"
-      msg.send books + blogs
+  robot.respond /investment resources|ir/i, (msg) ->
+      books_ar = [
+        "Angel Investing: The Gust Guide to Making Money and Having Fun Investing in Startups by David S. Rose (http://amzn.to/1sJTcS8)"
+        "Venture Deals: Be Smarter Than Your Lawyer and Venture Capitalist by Brad Feld (http://amzn.to/1bia6Qa)"
+        "The Alliance Framework by Reid Hoffman, Ben Casnocha and Chris Yeh (http://www.theallianceframework.com)"
+        "Early Exits: Exit Strategies for Entrepreneurs and Angel Investors (But Maybe Not Venture Capitalists) by Basil Peters (http://amzn.to/1wYvUxQ)"
+        "The Definitive Guide to Raising Money from Angels by Bill Payne (Download @ http://bit.ly/1uqWS0e)"
+      ]
+      books_str = "-- Books --\n"
+      for i in [0..books_ar.length] by 1
+        books_str += i + ". " + books_ar[i]
+
+      blogs_ar = [
+        "Venture Hacks (http://venturehacks.com)"
+        "Adventures in Capitalism (http://adventuresincapitalism.com)"
+      ]
+      blogs_str = "-- Blogs -- \n"
+      for i in [0..blogs_ar.length] by 1
+        blogs_str += i + ". " + blogs_ar[i]
+
+      people_ar = [
+        "Bill Payne"
+        "John O. Huston"
+        "David S. Rose"
+        "Chris Yeh"
+        "Howard Tullman"
+        "George Deeb"
+        "Charlie O'Donnell"
+        "Jeffrey Carter"
+        "Michael Gruber"
+        "Gabriel Weinberg"
+        "Glen Gottfried"
+        "Ann Winblad"
+        "Erin Griffith"
+        "Troy Henikoff"
+        "Dave Berkus"
+        "Imran Ahmad"
+        "Jerry Neumann"
+        "Rob Go"
+      ]
+      people_str = "-- People -- \n"
+      for i in [0..people_ar.length] by 1
+        people_str += i + ". " + people_ar[i]
+
+      msg.send books_str + blogs_str + people_str
 
