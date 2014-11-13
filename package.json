@@ -18,10 +18,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/hubot-scripts/hubot-starven.git"
+    "url": "git://github.com/robksawyer/hubot-starven.git"
   },
   "bugs": {
-    "url": "https://github.com/hubot-scripts/hubot-starven/issues"
+    "url": "https://github.com/robksawyer/hubot-starven/issues"
   },
   "dependencies": {
     "ascii-chart": "^1.1.0",
