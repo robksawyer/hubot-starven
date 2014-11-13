@@ -133,16 +133,16 @@ module.exports = (robot) ->
         "The Definitive Guide to Raising Money from Angels by Bill Payne (Download @ http://bit.ly/1uqWS0e)"
       ]
       books_str = "-- Books --\n"
-      for i in [0..books_ar.length] by 1
-        books_str += i + ". " + books_ar[i]
+      for i in [0..books_ar.length-1] by 1
+        books_str += i + ". " + books_ar[i] + "\n"
 
       blogs_ar = [
         "Venture Hacks (http://venturehacks.com)"
         "Adventures in Capitalism (http://adventuresincapitalism.com)"
       ]
       blogs_str = "-- Blogs -- \n"
-      for i in [0..blogs_ar.length] by 1
-        blogs_str += i + ". " + blogs_ar[i]
+      for i in [0..blogs_ar.length-1] by 1
+        blogs_str += i + ". " + blogs_ar[i] + "\n"
 
       people_ar = [
         "Bill Payne"
@@ -165,8 +165,8 @@ module.exports = (robot) ->
         "Rob Go"
       ]
       people_str = "-- People -- \n"
-      for i in [0..people_ar.length] by 1
-        people_str += i + ". " + people_ar[i]
+      for i in [0..people_ar.length-1] by 1
+        people_str += i + ". " + people_ar[i] + "\n"
 
       msg.send books_str + blogs_str + people_str
 
