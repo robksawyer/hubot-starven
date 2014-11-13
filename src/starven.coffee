@@ -106,8 +106,14 @@ module.exports = (robot) ->
   #   user > hubot stp
   #
   robot.respond /startup investment process|stp/i, (msg) ->
-      process_details = 
-        "The 7 Step Startup Investment Process for Venture Capitalists\n1. Identify the startup to invest in.\n2. Initial screening - Get to know more about the business and the entrepreneur.\n3. Second screening – This could involve workshops, a deeper dive, specific Q&A and in these an investor may bring in multiple subject matter experts that are trusted or that are leading other investments from within the firm.\n4. Light due dilligence\n5. The partner meeting - This is where the investment thesis is initially presented by the investor to the partners. This could be in person, socializing the deal, or by circulating a memo.\n6. Entrepreneur invited to present to partners - This is a good sign that the partners liked the investment thesis and are ready to invest.\n7. Terms and due dilligence - Signing the paperwork and covering terms.\n"
+      process_details = "The 7 Step Startup Investment Process for Venture Capitalists\n"
+      process_details += "1. Identify the startup to invest in.\n"
+      process_details += "2. Initial screening - Get to know more about the business and the entrepreneur.\n"
+      process_details += "3. Second screening – This could involve workshops, a deeper dive, specific Q&A and in these an investor may bring in multiple subject matter experts that are trusted or that are leading other investments from within the firm.\n"
+      process_details += "4. Light due dilligence\n"
+      process_details += "5. The partner meeting - This is where the investment thesis is initially presented by the investor to the partners. This could be in person, socializing the deal, or by circulating a memo.\n"
+      process_details += "6. Entrepreneur invited to present to partners - This is a good sign that the partners liked the investment thesis and are ready to invest.\n"
+      process_details += "7. Terms and due dilligence - Signing the paperwork and covering terms.\n"
       msg.send process_details
 
 
@@ -119,8 +125,12 @@ module.exports = (robot) ->
   #   user > hubot investment resources
   #
   robot.respond /investment resources/i, (msg) ->
-      books = 
-        "-- Books --\n1. <a href='http://www.amazon.com/Venture-Deals-Smarter-Lawyer-Capitalist/dp/1118443616'>Venture Deals: Be Smarter Than Your Lawyer and Venture Capitalist</a> by Brad Feld\n2. <a href='http://www.theallianceframework.com'>The Alliance Framework</a>\n"
-      blogs = "\n-- Blogs -- \n1. <a href='http://venturehacks.com'>Venture Hacks</a>\n2. <a href='http://adventuresincapitalism.com'>Adventures in Capitalism</a>\n"
+      books = "-- Books --\n"
+      books += "1. Venture Deals: Be Smarter Than Your Lawyer and Venture Capitalist by Brad Feld (http://amzn.to/1bia6Qa)\n"
+      books += "2. The Alliance Framework (http://www.theallianceframework.com)\n"
+      
+      blogs = "-- Blogs -- \n"
+      blogs += "1. Venture Hacks (http://venturehacks.com)\n"
+      blogs += "2. Adventures in Capitalism (http://adventuresincapitalism.com)\n"
       msg.send books + blogs
 
