@@ -134,7 +134,7 @@ module.exports = (robot) ->
       ]
       books_str = "-- Books --\n"
       for i in [0..books_ar.length-1] by 1
-        books_str += i + ". " + books_ar[i] + "\n"
+        books_str += (i+1) + ". " + books_ar[i] + "\n"
 
       blogs_ar = [
         "Venture Hacks (http://venturehacks.com)"
@@ -142,7 +142,7 @@ module.exports = (robot) ->
       ]
       blogs_str = "-- Blogs -- \n"
       for i in [0..blogs_ar.length-1] by 1
-        blogs_str += i + ". " + blogs_ar[i] + "\n"
+        blogs_str += (i+1) + ". " + blogs_ar[i] + "\n"
 
       people_ar = [
         "Bill Payne"
@@ -166,7 +166,7 @@ module.exports = (robot) ->
       ]
       people_str = "-- People -- \n"
       for i in [0..people_ar.length-1] by 1
-        people_str += i + ". " + people_ar[i] + "\n"
+        people_str += (i+1) + ". " + people_ar[i] + "\n"
 
-      msg.send books_str + blogs_str + people_str
+      msg.send books_str + "\n" +  blogs_str + "\n" + people_str
 
