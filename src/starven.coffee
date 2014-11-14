@@ -80,6 +80,7 @@ module.exports = (robot) ->
             gShort.shorten finalUrl, (err, url) ->
               msg.send(url); # http://goo.gl/fbsS
               msg.send rdata.description
+              msg.send "See the report at " + rdata.display_url
 
           else 
 
@@ -138,6 +139,7 @@ module.exports = (robot) ->
             gShort.shorten finalUrl, (err, url) ->
               msg.send(url); # http://goo.gl/fbsS
               msg.send rdata.description
+              msg.send "See the report at " + rdata.display_url
 
           else 
 
@@ -195,6 +197,7 @@ module.exports = (robot) ->
             gShort.shorten finalUrl, (err, url) ->
               msg.send(url); # http://goo.gl/fbsS
               msg.send rdata.description
+              msg.send "See the report at " + rdata.display_url
 
           else 
 
@@ -242,7 +245,7 @@ module.exports = (robot) ->
             rdata.column_names.shift() # Remove Date
             
             chart = quiche('line')
-            chart.setTitle("Venture-Backed M & A Exits");
+            chart.setTitle(rdata.name);
             chart.setWidth(750);
             chart.setHeight(400);
             # chart.addData(formattedData.a.reverse(), rdata.column_names[0], '6899C9');
@@ -257,6 +260,7 @@ module.exports = (robot) ->
             gShort.shorten finalUrl, (err, url) ->
               msg.send(url); # http://goo.gl/fbsS
               msg.send rdata.description
+              msg.send "See the report at " + rdata.display_url
 
           else 
 
@@ -304,7 +308,7 @@ module.exports = (robot) ->
             rdata.column_names.shift() # Remove Date
             
             chart = quiche('line')
-            chart.setTitle("Venture-Backed M & A Exits");
+            chart.setTitle(rdata.name);
             chart.setWidth(750);
             chart.setHeight(400);
             chart.addData(formattedData.a.reverse(), rdata.column_names[0], '6899C9');
@@ -319,6 +323,7 @@ module.exports = (robot) ->
             gShort.shorten finalUrl, (err, url) ->
               msg.send(url); # http://goo.gl/fbsS
               msg.send rdata.description
+              msg.send "See the report at " + rdata.display_url
 
           else 
 
@@ -367,7 +372,7 @@ module.exports = (robot) ->
             rdata.column_names.shift() # Remove Date
             
             chart = quiche('line')
-            chart.setTitle("Venture-Backed M & A Exits");
+            chart.setTitle("Venture-Backed Merger and Acquisition Exits");
             chart.setWidth(750);
             chart.setHeight(400);
             # chart.addData(formattedData.a.reverse(), rdata.column_names[0], '6899C9');
@@ -383,6 +388,7 @@ module.exports = (robot) ->
             gShort.shorten finalUrl, (err, url) ->
               msg.send(url); # http://goo.gl/fbsS
               msg.send rdata.description
+              msg.send "See the report at " + rdata.display_url
 
           else 
 
@@ -447,6 +453,7 @@ module.exports = (robot) ->
             gShort.shorten finalUrl, (err, url) ->
               msg.send(url); # http://goo.gl/fbsS
               msg.send rdata.description
+              msg.send "See the report at " + rdata.display_url
 
           else 
 
@@ -519,6 +526,7 @@ module.exports = (robot) ->
             gShort.shorten finalUrl, (err, url) ->
               msg.send(url); # http://goo.gl/fbsS
               msg.send rdata.description
+              msg.send "See the report at " + rdata.display_url
 
           else 
 
@@ -590,6 +598,7 @@ module.exports = (robot) ->
             gShort.shorten finalUrl, (err, url) ->
               msg.send(url); # http://goo.gl/fbsS
               msg.send rdata.description
+              msg.send "See the report at " + rdata.display_url
 
           else 
 
