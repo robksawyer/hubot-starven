@@ -150,7 +150,7 @@ module.exports = (robot) ->
   # Command:
   #   user > hubot vc ipos
   #
-  robot.respond /vc ipos/i, (msg) ->
+  robot.respond /vc ipos offer/i, (msg) ->
 
     curDate = new Date()
     curDate.setYear(curDate.getFullYear()-3) # Get the date three years ago
@@ -199,6 +199,130 @@ module.exports = (robot) ->
           else 
 
             msg.send "The dataset was too confusing, so I gave up."
+  
+  #
+  # Angel Investments
+  # Data compiled from the Center for Venture Research annual reports. Total Investmments in USD billion.
+  # 
+  # Command:
+  #   user > hubot active angels
+  #
+  robot.respond /active angels/i, (msg) ->
+
+    curDate = new Date()
+    curDate.setYear(curDate.getFullYear()-3) # Get the date three years ago
+    curDate = curDate.getFullYear() + "-" + curDate.getMonth() + "-" + "01"
+
+    robot.http(process.env.HUBOT_DATASETS_URL + "CVR/ANGEL_TOTALS.json?trim_start=" + curDate)
+       .header('accept', 'application/json')
+       .get() (err, res, body) -> 
+
+          if err
+            msg.send "Encountered an error :( #{err}"
+
+          if res.statusCode isnt 200
+            msg.send "I wasn't able to figure out what the numbers are."
+          
+          rdata = JSON.parse(body) if body
+
+          if rdata
+
+            # Use the data that was compiled
+            #msg.send "Please wait a few seconds. Now creating..."
+
+            formattedData = {}
+            formattedData.dates = ( dates[0] for dates in rdata.data)
+            # formattedData.a = (a[1] for a in rdata.data) #Total Investments ($B)
+            # formattedData.b = (b[2] for b in rdata.data) #Total Ventures Receiving Funds
+            formattedData.c = (c[3] for c in rdata.data) #Active Investors
+            
+            theDates = formattedData.dates
+            xVals = [theDates[0], theDates[Math.ceil(theDates.length/2)], theDates[theDates.length-1]]
+
+            rdata.column_names.shift() # Remove Date
+            
+            chart = quiche('line')
+            chart.setTitle("Venture-Backed M & A Exits");
+            chart.setWidth(750);
+            chart.setHeight(400);
+            # chart.addData(formattedData.a.reverse(), rdata.column_names[0], '6899C9');
+            # chart.addData(formattedData.b.reverse(), rdata.column_names[1], '9E5A8D'); #Number known
+            chart.addData(formattedData.c.reverse(), rdata.column_names[2], '50A450');
+            chart.addAxisLabels('x', xVals.reverse());
+            chart.setAutoScaling();
+            #chart.setTransparentBackground();
+            imageUrl = chart.getUrl(false)
+
+            finalUrl = "#{imageUrl}#.png"
+            gShort.shorten finalUrl, (err, url) ->
+              msg.send(url); # http://goo.gl/fbsS
+              msg.send rdata.description
+
+          else 
+
+            msg.send "The dataset was too confusing, so I gave up."
+
+  #
+  # Angel Investments
+  # Data compiled from the Center for Venture Research annual reports. Total Investmments in USD billion.
+  # 
+  # Command:
+  #   user > hubot angel totals
+  #
+  robot.respond /angel totals/i, (msg) ->
+
+    curDate = new Date()
+    curDate.setYear(curDate.getFullYear()-3) # Get the date three years ago
+    curDate = curDate.getFullYear() + "-" + curDate.getMonth() + "-" + "01"
+
+    robot.http(process.env.HUBOT_DATASETS_URL + "CVR/ANGEL_TOTALS.json?trim_start=" + curDate)
+       .header('accept', 'application/json')
+       .get() (err, res, body) -> 
+
+          if err
+            msg.send "Encountered an error :( #{err}"
+
+          if res.statusCode isnt 200
+            msg.send "I wasn't able to figure out what the numbers are."
+          
+          rdata = JSON.parse(body) if body
+
+          if rdata
+
+            # Use the data that was compiled
+            #msg.send "Please wait a few seconds. Now creating..."
+
+            formattedData = {}
+            formattedData.dates = ( dates[0] for dates in rdata.data)
+            formattedData.a = (a[1] for a in rdata.data) #Total Investments ($B)
+            # formattedData.b = (b[2] for b in rdata.data) #Total Ventures Receiving Funds
+            #formattedData.c = (c[3] for c in rdata.data) #Active Investors
+            
+            theDates = formattedData.dates
+            xVals = [theDates[0], theDates[Math.ceil(theDates.length/2)], theDates[theDates.length-1]]
+
+            rdata.column_names.shift() # Remove Date
+            
+            chart = quiche('line')
+            chart.setTitle("Venture-Backed M & A Exits");
+            chart.setWidth(750);
+            chart.setHeight(400);
+            chart.addData(formattedData.a.reverse(), rdata.column_names[0], '6899C9');
+            # chart.addData(formattedData.b.reverse(), rdata.column_names[1], '9E5A8D'); #Number known
+            # chart.addData(formattedData.c.reverse(), rdata.column_names[2], '50A450');
+            chart.addAxisLabels('x', xVals.reverse());
+            chart.setAutoScaling();
+            #chart.setTransparentBackground();
+            imageUrl = chart.getUrl(false)
+
+            finalUrl = "#{imageUrl}#.png"
+            gShort.shorten finalUrl, (err, url) ->
+              msg.send(url); # http://goo.gl/fbsS
+              msg.send rdata.description
+
+          else 
+
+            msg.send "The dataset was too confusing, so I gave up."
 
   #
   # Venture-Backed M & A Exits
@@ -232,10 +356,10 @@ module.exports = (robot) ->
 
             formattedData = {}
             formattedData.dates = ( dates[0] for dates in rdata.data)
-            formattedData.a = (a[1] for a in rdata.data)
+            # formattedData.a = (a[1] for a in rdata.data)
             formattedData.b = (b[2] for b in rdata.data)
-            formattedData.c = (c[3] for c in rdata.data)
-            formattedData.d = (d[4] for d in rdata.data)
+            # formattedData.c = (c[3] for c in rdata.data)
+            # formattedData.d = (d[4] for d in rdata.data)
             
             theDates = formattedData.dates
             xVals = [theDates[0], theDates[Math.ceil(theDates.length/2)], theDates[theDates.length-1]]
@@ -243,13 +367,13 @@ module.exports = (robot) ->
             rdata.column_names.shift() # Remove Date
             
             chart = quiche('line')
-            chart.setTitle(rdata.name);
+            chart.setTitle("Venture-Backed M & A Exits");
             chart.setWidth(750);
             chart.setHeight(400);
-            chart.addData(formattedData.a.reverse(), rdata.column_names[0], '6899C9');
-            chart.addData(formattedData.b.reverse(), rdata.column_names[1], '9E5A8D');
-            chart.addData(formattedData.c.reverse(), rdata.column_names[2], '50A450');
-            chart.addData(formattedData.d.reverse(), rdata.column_names[3], 'E57F3C');
+            # chart.addData(formattedData.a.reverse(), rdata.column_names[0], '6899C9');
+            chart.addData(formattedData.b.reverse(), rdata.column_names[1], '9E5A8D'); #Number known
+            # chart.addData(formattedData.c.reverse(), rdata.column_names[2], '50A450');
+            # chart.addData(formattedData.d.reverse(), rdata.column_names[3], 'E57F3C');
             chart.addAxisLabels('x', xVals.reverse());
             chart.setAutoScaling();
             #chart.setTransparentBackground();
