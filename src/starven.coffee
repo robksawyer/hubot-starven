@@ -20,7 +20,7 @@
 quiche = require('quiche') # https://www.npmjs.org/package/quiche
 gShort = require('short-url') # https://www.npmjs.org/package/short-url
 
-process.env.HUBOT_DATASETS_URL ||= 'https://www.quandl.com/api/v1/datasets/COOLEY/'
+process.env.HUBOT_DATASETS_URL ||= 'https://www.quandl.com/api/v1/datasets/'
 process.env.HUBOT_GOOGLE_CHART_URL ||= 'http://chart.googleapis.com/chart?'
 
 module.exports = (robot) ->
@@ -29,20 +29,321 @@ module.exports = (robot) ->
     msg.reply "I can tell you a little about startups!"
 
   #
-  # Startup Valuations
-  # Startup financing is typically done in several rounds, as the startup company grows and its capital needs evolve. The first institutional round is 
-  # usually called the "Series A round". Later rounds are called Series B, C, D, etc.
+  # Venture-Backed IPOs (Median Offer Amount and Media Post Value)
+  # This data is from the NVCA yearbook, which includes a comprehensive analysis of U.S. venture capital industry statistics. Age in years and values in USD million.
   # 
   # Command:
-  #   user > hubot startup vals
+  #   user > hubot vc ipos age
   #
-  robot.respond /startup (valuations|vals)/i, (msg) ->
+  robot.respond /vc ipos age/i, (msg) ->
 
     curDate = new Date()
     curDate.setYear(curDate.getFullYear()-3) # Get the date three years ago
     curDate = curDate.getFullYear() + "-" + curDate.getMonth() + "-" + "01"
-    
-    robot.http(process.env.HUBOT_DATASETS_URL + "VC_VALUE_BY_SERIES.json?trim_start=" + curDate + "&collapse=quarterly")
+
+    robot.http(process.env.HUBOT_DATASETS_URL + "NVCA/VENTURE_10_0.json?trim_start=" + curDate)
+       .header('accept', 'application/json')
+       .get() (err, res, body) -> 
+
+          if err
+            msg.send "Encountered an error :( #{err}"
+
+          if res.statusCode isnt 200
+            msg.send "I wasn't able to figure out what the numbers are."
+          
+          rdata = JSON.parse(body) if body
+
+          if rdata
+
+            # Use the data that was compiled
+            formattedData = {}
+            formattedData.dates = ( dates[0] for dates in rdata.data)
+            formattedData.a = (a[3] for a in rdata.data)
+            formattedData.b = (b[6] for b in rdata.data)
+            
+            theDates = formattedData.dates
+            xVals = [theDates[0], theDates[Math.ceil(theDates.length/2)], theDates[theDates.length-1]]
+
+            rdata.column_names.shift() # Remove Date
+            
+            chart = quiche('line')
+            chart.setTitle(rdata.name);
+            chart.setWidth(750);
+            chart.setHeight(400);
+            chart.addData(formattedData.a.reverse(), rdata.column_names[2], '6899C9');
+            chart.addData(formattedData.b.reverse(), rdata.column_names[5], '9E5A8D');
+            chart.addAxisLabels('x', xVals.reverse());
+            chart.setAutoScaling();
+            imageUrl = chart.getUrl(false)
+
+            finalUrl = "#{imageUrl}#.png"
+            gShort.shorten finalUrl, (err, url) ->
+              msg.send(url); # http://goo.gl/fbsS
+              msg.send rdata.description
+
+          else 
+
+            msg.send "The dataset was too confusing, so I gave up."
+
+
+  #
+  # Venture-Backed IPOs (Mean and Median Age at IPO)
+  # This data is from the NVCA yearbook, which includes a comprehensive analysis of U.S. venture capital industry statistics. Age in years and values in USD million.
+  # 
+  # Command:
+  #   user > hubot vc ipos age
+  #
+  robot.respond /vc ipos age/i, (msg) ->
+
+    curDate = new Date()
+    curDate.setYear(curDate.getFullYear()-3) # Get the date three years ago
+    curDate = curDate.getFullYear() + "-" + curDate.getMonth() + "-" + "01"
+
+    robot.http(process.env.HUBOT_DATASETS_URL + "NVCA/VENTURE_10_0.json?trim_start=" + curDate)
+       .header('accept', 'application/json')
+       .get() (err, res, body) -> 
+
+          if err
+            msg.send "Encountered an error :( #{err}"
+
+          if res.statusCode isnt 200
+            msg.send "I wasn't able to figure out what the numbers are."
+          
+          rdata = JSON.parse(body) if body
+
+          if rdata
+
+            # Use the data that was compiled
+            formattedData = {}
+            formattedData.dates = ( dates[0] for dates in rdata.data)
+            formattedData.a = (a[8] for a in rdata.data)
+            formattedData.b = (b[9] for b in rdata.data)
+            
+            theDates = formattedData.dates
+            xVals = [theDates[0], theDates[Math.ceil(theDates.length/2)], theDates[theDates.length-1]]
+
+            rdata.column_names.shift() # Remove Date
+            
+            chart = quiche('line')
+            chart.setTitle(rdata.name);
+            chart.setWidth(750);
+            chart.setHeight(400);
+            chart.addData(formattedData.a.reverse(), rdata.column_names[7], '6899C9');
+            chart.addData(formattedData.b.reverse(), rdata.column_names[8], '9E5A8D');
+            chart.addAxisLabels('x', xVals.reverse());
+            chart.setAutoScaling();
+            imageUrl = chart.getUrl(false)
+
+            finalUrl = "#{imageUrl}#.png"
+            gShort.shorten finalUrl, (err, url) ->
+              msg.send(url); # http://goo.gl/fbsS
+              msg.send rdata.description
+
+          else 
+
+            msg.send "The dataset was too confusing, so I gave up."
+
+  #
+  # Venture-Backed IPOs (Number of IPOs and Offer Amount)
+  # This data is from the NVCA yearbook, which includes a comprehensive analysis of U.S. venture capital industry statistics. Age in years and values in USD million.
+  # 
+  # Command:
+  #   user > hubot vc ipos
+  #
+  robot.respond /vc ipos/i, (msg) ->
+
+    curDate = new Date()
+    curDate.setYear(curDate.getFullYear()-3) # Get the date three years ago
+    curDate = curDate.getFullYear() + "-" + curDate.getMonth() + "-" + "01"
+
+    robot.http(process.env.HUBOT_DATASETS_URL + "NVCA/VENTURE_10_0.json?trim_start=" + curDate)
+       .header('accept', 'application/json')
+       .get() (err, res, body) -> 
+
+          if err
+            msg.send "Encountered an error :( #{err}"
+
+          if res.statusCode isnt 200
+            msg.send "I wasn't able to figure out what the numbers are."
+          
+          rdata = JSON.parse(body) if body
+
+          if rdata
+
+            # Use the data that was compiled
+            formattedData = {}
+            formattedData.dates = ( dates[0] for dates in rdata.data)
+            formattedData.a = (a[1] for a in rdata.data)
+            formattedData.b = (b[2] for b in rdata.data)
+            
+            theDates = formattedData.dates
+            xVals = [theDates[0], theDates[Math.ceil(theDates.length/2)], theDates[theDates.length-1]]
+
+            rdata.column_names.shift() # Remove Date
+            
+            chart = quiche('line')
+            chart.setTitle(rdata.name);
+            chart.setWidth(750);
+            chart.setHeight(400);
+            chart.addData(formattedData.a.reverse(), rdata.column_names[0], '6899C9');
+            chart.addData(formattedData.b.reverse(), rdata.column_names[1], '9E5A8D');
+            chart.addAxisLabels('x', xVals.reverse());
+            chart.setAutoScaling();
+            imageUrl = chart.getUrl(false)
+
+            finalUrl = "#{imageUrl}#.png"
+            gShort.shorten finalUrl, (err, url) ->
+              msg.send(url); # http://goo.gl/fbsS
+              msg.send rdata.description
+
+          else 
+
+            msg.send "The dataset was too confusing, so I gave up."
+
+  #
+  # Venture-Backed M & A Exits
+  # This data is from the NVCA yearbook, which includes a comprehensive analysis of U.S. venture capital industry statistics. Price and Average are in USD millions.
+  # 
+  # Command:
+  #   user > hubot vc exits
+  #
+  robot.respond /vc exits/i, (msg) ->
+
+    curDate = new Date()
+    curDate.setYear(curDate.getFullYear()-3) # Get the date three years ago
+    curDate = curDate.getFullYear() + "-" + curDate.getMonth() + "-" + "01"
+
+    robot.http(process.env.HUBOT_DATASETS_URL + "NVCA/VENTURE_10_0.json?trim_start=" + curDate)
+       .header('accept', 'application/json')
+       .get() (err, res, body) -> 
+
+          if err
+            msg.send "Encountered an error :( #{err}"
+
+          if res.statusCode isnt 200
+            msg.send "I wasn't able to figure out what the numbers are."
+          
+          rdata = JSON.parse(body) if body
+
+          if rdata
+
+            # Use the data that was compiled
+            #msg.send "Please wait a few seconds. Now creating..."
+
+            formattedData = {}
+            formattedData.dates = ( dates[0] for dates in rdata.data)
+            formattedData.a = (a[1] for a in rdata.data)
+            formattedData.b = (b[2] for b in rdata.data)
+            formattedData.c = (c[3] for c in rdata.data)
+            formattedData.d = (d[4] for d in rdata.data)
+            
+            theDates = formattedData.dates
+            xVals = [theDates[0], theDates[Math.ceil(theDates.length/2)], theDates[theDates.length-1]]
+
+            rdata.column_names.shift() # Remove Date
+            
+            chart = quiche('line')
+            chart.setTitle(rdata.name);
+            chart.setWidth(750);
+            chart.setHeight(400);
+            chart.addData(formattedData.a.reverse(), rdata.column_names[0], '6899C9');
+            chart.addData(formattedData.b.reverse(), rdata.column_names[1], '9E5A8D');
+            chart.addData(formattedData.c.reverse(), rdata.column_names[2], '50A450');
+            chart.addData(formattedData.d.reverse(), rdata.column_names[3], 'E57F3C');
+            chart.addAxisLabels('x', xVals.reverse());
+            chart.setAutoScaling();
+            #chart.setTransparentBackground();
+            imageUrl = chart.getUrl(false)
+
+            finalUrl = "#{imageUrl}#.png"
+            gShort.shorten finalUrl, (err, url) ->
+              msg.send(url); # http://goo.gl/fbsS
+              msg.send rdata.description
+
+          else 
+
+            msg.send "The dataset was too confusing, so I gave up."
+
+  #
+  # Venture Capital Investments By Stage - Number of Deals (Quarterly)
+  # This data is from the NVCA yearbook, which includes a comprehensive analysis of U.S. venture capital industry statistics.
+  # 
+  # Command:
+  #   user > hubot vc deal #
+  #
+  robot.respond /vc deal (#|numbers)/i, (msg) ->
+
+    curDate = new Date()
+    curDate.setYear(curDate.getFullYear()-3) # Get the date three years ago
+    curDate = curDate.getFullYear() + "-" + curDate.getMonth() + "-" + "01"
+
+    robot.http(process.env.HUBOT_DATASETS_URL + "NVCA/VENTURE_3_09D.json?trim_start=" + curDate)
+       .header('accept', 'application/json')
+       .get() (err, res, body) -> 
+
+          if err
+            msg.send "Encountered an error :( #{err}"
+
+          if res.statusCode isnt 200
+            msg.send "I wasn't able to figure out what the numbers are."
+          
+          rdata = JSON.parse(body) if body
+
+          if rdata
+
+            # Use the data that was compiled
+            #msg.send "Please wait a few seconds. Now creating..."
+
+            formattedData = {}
+            formattedData.dates = ( dates[0] for dates in rdata.data)
+            formattedData.a = (a[1] for a in rdata.data)
+            formattedData.b = (b[2] for b in rdata.data)
+            formattedData.c = (c[3] for c in rdata.data)
+            formattedData.d = (d[4] for d in rdata.data)
+            
+            theDates = formattedData.dates
+            xVals = [theDates[0], theDates[Math.ceil(theDates.length/2)], theDates[theDates.length-1]]
+
+            rdata.column_names.shift() # Remove Date
+            
+            chart = quiche('line')
+            chart.setTitle(rdata.name);
+            chart.setWidth(750);
+            chart.setHeight(400);
+            chart.addData(formattedData.a.reverse(), rdata.column_names[0], '6899C9');
+            chart.addData(formattedData.b.reverse(), rdata.column_names[1], '9E5A8D');
+            chart.addData(formattedData.c.reverse(), rdata.column_names[2], '50A450');
+            chart.addData(formattedData.d.reverse(), rdata.column_names[3], 'E57F3C');
+            chart.addAxisLabels('x', xVals.reverse());
+            chart.setAutoScaling();
+            #chart.setTransparentBackground();
+            imageUrl = chart.getUrl(false)
+
+            finalUrl = "#{imageUrl}#.png"
+            gShort.shorten finalUrl, (err, url) ->
+              msg.send(url); # http://goo.gl/fbsS
+              msg.send rdata.description
+
+          else 
+
+            msg.send "The dataset was too confusing, so I gave up."
+
+
+  #
+  # Venture Capital - Deals by Series (Quarterly)
+  # Startup financing is typically done in several rounds, as the startup company grows and its capital needs evolve. The first institutional round is 
+  # usually called the "Series A round". Later rounds are called Series B, C, D, etc.
+  # 
+  # Command:
+  #   user > hubot vc deals
+  #
+  robot.respond /vc (deals|deals by series)/i, (msg) ->
+
+    curDate = new Date()
+    curDate.setYear(curDate.getFullYear()-3) # Get the date three years ago
+    curDate = curDate.getFullYear() + "-" + curDate.getMonth() + "-" + "01"
+
+    robot.http(process.env.HUBOT_DATASETS_URL + "COOLEY/VC_DEALS_BY_SERIES.json?trim_start=" + curDate + "&collapse=quarterly")
        .header('accept', 'application/json')
        .get() (err, res, body) -> 
 
@@ -94,6 +395,199 @@ module.exports = (robot) ->
             gShort.shorten finalUrl, (err, url) ->
               msg.send(url); # http://goo.gl/fbsS
               msg.send rdata.description
+
+          else 
+
+            msg.send "The dataset was too confusing, so I gave up."
+
+  #
+  # Venture Capital - Median Pre-Money Valuations by Series
+  # This data provides a summary of data reflecting our experience in venture capital financing terms and trends. Information is taken from transactions 
+  # in which Cooley served as counsel to either the issuing company or the investors. Values in USD million.
+  # 
+  # Command:
+  #   user > hubot vc premoney
+  #
+  robot.respond /vc (premoney|pre)/i, (msg) ->
+
+    curDate = new Date()
+    curDate.setYear(curDate.getFullYear()-3) # Get the date three years ago
+    curDate = curDate.getFullYear() + "-" + curDate.getMonth() + "-" + "01"
+    
+    robot.http(process.env.HUBOT_DATASETS_URL + "COOLEY/VC_VALUE_BY_SERIES.json?trim_start=" + curDate + "&collapse=quarterly")
+       .header('accept', 'application/json')
+       .get() (err, res, body) -> 
+
+          if err
+            msg.send "Encountered an error :( #{err}"
+
+          if res.statusCode isnt 200
+            msg.send "I wasn't able to figure out what the numbers are."
+          
+          rdata = JSON.parse(body) if body
+
+          if rdata
+
+            # Use the data that was compiled
+            #msg.send "Please wait a few seconds. Now creating..."
+
+            formattedData = {}
+            formattedData.dates = ( dates[0] for dates in rdata.data)
+            formattedData.series_a = (a[1] for a in rdata.data)
+            formattedData.series_b = (b[2] for b in rdata.data)
+            formattedData.series_c = (c[3] for c in rdata.data)
+            formattedData.series_d = (d[4] for d in rdata.data)
+            
+            theDates = formattedData.dates
+            xVals = [theDates[0], theDates[Math.ceil(theDates.length/2)], theDates[theDates.length-1]]
+            #theDates = theDates.join(',').replace(/\-/g,'').split(',') # Remove the - so that charts will read as a number
+
+            series_a = formattedData.series_a 
+            series_b = formattedData.series_b 
+            series_c = formattedData.series_c
+            series_d = formattedData.series_d
+
+            rdata.column_names.shift() # Remove Date
+            
+            chart = quiche('line')
+            chart.setTitle(rdata.name);
+            chart.setWidth(750);
+            chart.setHeight(400);
+            chart.addData(series_a.reverse(), rdata.column_names[0], '6899C9');
+            chart.addData(series_b.reverse(), rdata.column_names[1], '9E5A8D');
+            chart.addData(series_c.reverse(), rdata.column_names[2], '50A450');
+            chart.addData(series_d.reverse(), rdata.column_names[3], 'E57F3C');
+            chart.addAxisLabels('x', xVals.reverse());
+            chart.setAutoScaling();
+            #chart.setTransparentBackground();
+            imageUrl = chart.getUrl(false)
+
+            finalUrl = "#{imageUrl}#.png"
+            gShort.shorten finalUrl, (err, url) ->
+              msg.send(url); # http://goo.gl/fbsS
+              msg.send rdata.description
+
+          else 
+
+            msg.send "The dataset was too confusing, so I gave up."
+  
+  #
+  # Venture Capital - Total Deal Volumes (Quarterly)
+  # This data provides a summary of data reflecting our experience in venture capital financing terms and trends. 
+  # Information is taken from transactions in which Cooley served as counsel to either the issuing company or the investors. Amount raised in USD million.
+  # 
+  # Command:
+  #   user > hubot vc deal volumes
+  #
+  robot.respond /vc (deal volumes|dv)/i, (msg) ->
+
+    curDate = new Date()
+    curDate.setYear(curDate.getFullYear()-3) # Get the date three years ago
+    curDate = curDate.getFullYear() + "-" + curDate.getMonth() + "-" + "01"
+    
+    robot.http(process.env.HUBOT_DATASETS_URL + "COOLEY/VC_TOTAL_DEAL_VOLUME.json?trim_start=" + curDate + "&collapse=quarterly")
+       .header('accept', 'application/json')
+       .get() (err, res, body) -> 
+
+          if err
+            msg.send "Encountered an error :( #{err}"
+
+          if res.statusCode isnt 200
+            msg.send "I wasn't able to figure out what the numbers are."
+          
+          rdata = JSON.parse(body) if body
+
+          if rdata
+
+            # Use the data that was compiled
+
+            formattedData = {}
+            formattedData.dates = ( dates[0] for dates in rdata.data)
+            formattedData.a = (a[1] for a in rdata.data)
+            formattedData.b = (b[2] for b in rdata.data)
+            
+            theDates = formattedData.dates
+            xVals = [theDates[0], theDates[Math.ceil(theDates.length/2)], theDates[theDates.length-1]]
+
+            rdata.column_names.shift() # Remove Date
+            
+            chart = quiche('line')
+            chart.setTitle(rdata.name);
+            chart.setWidth(750);
+            chart.setHeight(400);
+            chart.addData(formattedData.a.reverse(), rdata.column_names[0], '6899C9');
+            chart.addData(formattedData.b.reverse(), rdata.column_names[1], '9E5A8D');
+
+            chart.addAxisLabels('x', xVals.reverse());
+            chart.setAutoScaling();
+            #chart.setTransparentBackground();
+            imageUrl = chart.getUrl(false)
+
+            finalUrl = "#{imageUrl}#.png"
+            gShort.shorten finalUrl, (err, url) ->
+              msg.send(url); # http://goo.gl/fbsS
+              msg.send rdata.description
+              msg.send "See the report at " + rdata.display_url
+
+          else 
+
+            msg.send "The dataset was too confusing, so I gave up."
+
+  #
+  # Venture Capital - Percentage of Up Rounds (Quarterly)
+  # This data provides a summary of data reflecting our experience in venture capital financing terms and trends. Information is taken from 
+  # transactions in which Cooley served as counsel to either the issuing company or the investors.
+  # 
+  # Command:
+  #   user > hubot vc ups
+  #
+  robot.respond /vc ups/i, (msg) ->
+
+    curDate = new Date()
+    curDate.setYear(curDate.getFullYear()-3) # Get the date three years ago
+    curDate = curDate.getFullYear() + "-" + curDate.getMonth() + "-" + "01"
+
+    robot.http(process.env.HUBOT_DATASETS_URL + "COOLEY/VC_UPROUNDS.json?trim_start=" + curDate + "&collapse=quarterly")
+       .header('accept', 'application/json')
+       .get() (err, res, body) -> 
+
+          if err
+            msg.send "Encountered an error :( #{err}"
+
+          if res.statusCode isnt 200
+            msg.send "I wasn't able to figure out what the numbers are."
+          
+          rdata = JSON.parse(body) if body
+
+          if rdata
+
+            # Use the data that was compiled
+
+            formattedData = {}
+            formattedData.dates = ( dates[0] for dates in rdata.data)
+            formattedData.a = (a[1] for a in rdata.data)
+            
+            theDates = formattedData.dates
+            xVals = [theDates[0], theDates[Math.ceil(theDates.length/2)], theDates[theDates.length-1]]
+
+            rdata.column_names.shift() # Remove Date
+            
+            chart = quiche('line')
+            chart.setTitle(rdata.name);
+            chart.setWidth(750);
+            chart.setHeight(400);
+            chart.addData(formattedData.a.reverse(), rdata.column_names[0], '6899C9');
+
+            chart.addAxisLabels('x', xVals.reverse());
+            chart.setAutoScaling();
+            #chart.setTransparentBackground();
+            imageUrl = chart.getUrl(false)
+
+            finalUrl = "#{imageUrl}#.png"
+            gShort.shorten finalUrl, (err, url) ->
+              msg.send(url); # http://goo.gl/fbsS
+              msg.send rdata.description
+              msg.send "See the report at " + rdata.display_url
 
           else 
 
