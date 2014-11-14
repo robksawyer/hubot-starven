@@ -33,9 +33,9 @@ module.exports = (robot) ->
   # This data is from the NVCA yearbook, which includes a comprehensive analysis of U.S. venture capital industry statistics. Age in years and values in USD million.
   # 
   # Command:
-  #   user > hubot vc ipos age
+  #   user > hubot vc ipos ov
   #
-  robot.respond /vc ipos age/i, (msg) ->
+  robot.respond /vc ipos ov/i, (msg) ->
 
     curDate = new Date()
     curDate.setYear(curDate.getFullYear()-3) # Get the date three years ago
